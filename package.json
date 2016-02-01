@@ -1,0 +1,54 @@
+{
+  "name": "test-level",
+  "version": "0.0.1",
+  "description": "Create temporary levelup databases with unique names",
+  "license": "MIT",
+  "author": {
+    "name": "Vincent Weevers",
+    "email": "mail@vincentweevers.nl"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib/index.js",
+    "lib/module-root.js",
+    "lib/try-require.js"
+  ],
+  "scripts": {
+    "build": "babel -d lib src",
+    "build-test": "npm run build && npm test",
+    "test": "node lib/test"
+  },
+  "dependencies": {
+    "existent": "~1.0.1",
+    "kindof": "~2.0.0",
+    "stack-trace": "0.0.9",
+    "tmpgen": "~1.1.1",
+    "tape": "~4.4.0"
+  },
+  "peerDependencies": {
+    "levelup": "^1.0.0"
+  },
+  "devDependencies": {
+    "bytespace": "vweevers/bytespace#fix-forward-events",
+    "cross-spawn-async": "~2.1.6",
+    "level-sublevel": "~6.5.2",
+    "leveldown": "~1.4.4",
+    "levelup": "~1.3.1",
+    "memdown": "~1.1.1",
+    "require-rebuild": "vweevers/require-rebuild#dev",
+    "semver": "~5.1.0"
+  },
+  "keywords": [
+    "level",
+    "level-test",
+    "levelup",
+    "test"
+  ],
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": "vweevers/test-level",
+  "bugs": "https://github.com/vweevers/test-level/issues",
+  "homepage": "https://github.com/vweevers/test-level"
+}
