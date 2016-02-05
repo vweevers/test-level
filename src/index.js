@@ -59,7 +59,7 @@ module.exports = function factory(name, opts = {}) {
     const location = tmp(name)
     const levelup = tryRequire('levelup')
 
-    let db = levelup(location, { ...levelOpts, ...opts }, cb)
+    let db = levelup(location, encodingOpts({ ...levelOpts, ...opts }), cb)
 
     const close = typeof db.close === 'function' ? db.close.bind(db) : noop
     const loc = db.location
@@ -217,4 +217,13 @@ function getTestArgs(args, override = {}) {
 
   const { skip, timeout, ...dbOpts } = { ...opts, ...override }
   return { name, tapeOpts: { skip, timeout }, dbOpts, cb };
+}
+
+function encodingOpts(opts) {
+  if (opts.encoding) {
+    if (!opts.keyEncoding) opts.keyEncoding = opts.encoding
+    if (!opts.valueEncoding) opts.valueEncoding = opts.encoding
+  }
+
+  return opts
 }
