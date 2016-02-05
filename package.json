@@ -1,6 +1,6 @@
 {
   "name": "test-level",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create temporary levelup databases with unique names",
   "license": "MIT",
   "author": {
