@@ -18,16 +18,35 @@ const regexes = [
 
 module.exports = tryRequire
 
+function rootRequire(ids) {
+  for(let i=0, last=ids.length-1; i<=last; i++) {
+    try { return require(ids[i]) } catch(err) {
+      if (!isNotFoundError(err)) throw err
+    }
+  }
+
+  let root = module.parent
+  while(root.parent) root = root.parent
+
+  // For `npm link` situations
+  for(let i=0, last=ids.length-1; i<=last; i++) {
+    try { return root.require(ids[i]) } catch(err) {
+      if (i === last || !isNotFoundError(err)) throw err
+    }
+  }
+}
+
 function tryRequire(id, opts) {
   const { prefix, silent } = opts || {}
+  const ids = [id]
 
   // Prefixed id takes precedence
   if (prefix && id.slice(0, prefix.length) !== prefix) {
-    try { return require(prefix+id) } catch(_) {}
+    ids.unshift(prefix+id)
   }
 
   try {
-    return require(id)
+    return rootRequire(ids)
   } catch (err) {
     if (silent) return
 
