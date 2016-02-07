@@ -39,6 +39,9 @@ module.exports = function factory(name, opts = {}) {
       break
     case 'array':
       break
+    case 'function':
+      wrap = [wrap]
+      break
     default: {
       const desc = 'Expected object, string or array for "wrap", got: '
       throw new Error(desc + kindOf(wrap))
@@ -67,8 +70,8 @@ module.exports = function factory(name, opts = {}) {
     // In case db.close was not called
     // Requires node 0.12.11 or later.
     // See https://github.com/nodejs/node-v0.x-archive/commit/a2eeb43deda58e7bbb8fcf24b934157992b937c0
-    process.once('beforeExit', close)
-    db.once('closed', () => process.removeListener('beforeExit', close))
+    const removeListener = beforeExit(close)
+    db.once('closed', removeListener)
 
     // Clean after close
     if (clean && typeof tmp.del === 'function') db.once('closed', () => {
@@ -85,6 +88,25 @@ module.exports = function factory(name, opts = {}) {
     })
 
     return db
+  }
+}
+
+function beforeExit(fn) {
+  let listeners = beforeExit.listeners
+
+  if (!listeners) {
+    listeners = beforeExit.listeners = []
+
+    process.once('beforeExit', () => {
+      listeners.forEach(fn => fn())
+    })
+  }
+
+  listeners.push(fn)
+
+  return function off() {
+    const i = listeners.indexOf(fn)
+    if (i>=0) return listeners.splice(i, 1)
   }
 }
 
